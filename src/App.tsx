@@ -16,8 +16,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [myAccount, setMyAccount] = useState<firebase.User>();
 
-  const provider = new firebase.auth.GoogleAuthProvider();
-
   // ログイン処理
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -33,6 +31,7 @@ function App() {
   }, [myAccount])
 
   const login = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
   }
 
