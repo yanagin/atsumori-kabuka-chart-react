@@ -18,6 +18,7 @@ function App() {
 
   const provider = new firebase.auth.GoogleAuthProvider();
 
+  // ログイン処理
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       setLoading(false);
@@ -25,6 +26,11 @@ function App() {
       setMyAccount(user);
     });
   }, []);
+
+  // ログインしてユーザー情報がセットされたらチャートを表示
+  useEffect(() => {
+    refreshChart();
+  }, [myAccount])
 
   const login = () => {
     firebase.auth().signInWithRedirect(provider);
@@ -78,41 +84,29 @@ function App() {
             return;
           }
           chart.data.labels.push(data.key);
-          /*
-          chart.data.datasets.forEach(dataset => {
-            dataset.data.push({
-              x: data.key,
-              y: data.kabuka
-            });
-          });
-          */
           chart.data.datasets[0].data.push(data.kabuka);
         });
-        console.log(chart);
         setChartData(chart);
       });
   }
 
   return (
     <div className="App">
-      <header className="App-header">
-        {loading ? (
-          <p>
-            LOADING.....
-          </p>
-        ) : !myAccount ? (
-          <p>
-            ログインが必要です<br />
-            <a onClick={login}>Login as google</a>
-          </p>
-        ) : 
-          <p>
-            ログイン済み<br />
-            <a onClick={refreshChart}>Refresh chart</a>
-            {chartData ? <Chart data={chartData.data} options={chartData.options} /> : <></>}
-          </p>
-        }
-      </header>
+      <h1>あつ森カブ値チャート</h1>
+      {loading ? (
+        <p>
+          LOADING.....
+        </p>
+      ) : !myAccount ? (
+        <p>
+          ログインが必要です<br />
+          <a onClick={login}>Login as google</a>
+        </p>
+      ) : 
+        <p>
+          {chartData ? <Chart data={chartData.data} options={chartData.options} /> : <></>}
+        </p>
+      }
     </div>
   );
 }
