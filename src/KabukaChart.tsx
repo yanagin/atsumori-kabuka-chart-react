@@ -16,14 +16,17 @@ type ChartData = {
 }
 
 const KabukaChart = (props: Props) => {
+    const [loading, setLoading] = useState(false);
     const [offsetDays, setOffsetDays] = useState(0);
     const [chartData, setChartData] = useState<ChartData>();
 
     useEffect(() => {
+        setLoading(true);
         const weekFirstDay = getWeekFirstDay(offsetDays);
         if (!weekFirstDay) {
             return;
         }
+        console.log(weekFirstDay);
         const keyConditionFrom = formatDate(weekFirstDay) + '_AM';
         const keyConditionTo = formatDate(addDate(weekFirstDay, 7)) + '_AM';
         let history = firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka')
@@ -44,7 +47,8 @@ const KabukaChart = (props: Props) => {
             });
             setChartData(chart);
         });
-    }, [props.user]);
+        setLoading(false);
+    }, [props.user, loading, offsetDays]);
 
     const createChartData = (label: string): ChartData => {
         return {
@@ -103,8 +107,30 @@ const KabukaChart = (props: Props) => {
     }
 
     return (
-        chartData ? <Chart data={chartData.data} options={chartData.options} />
-            : <></>
+        <div>
+            {
+                loading
+                    ? (
+                        <p>
+                            LOADING.....
+                        </p>
+                    )
+                    : (
+                        <>
+                            {
+                                chartData
+                                    ? <Chart data={chartData.data} options={chartData.options} />
+                                    : <></>
+                            }
+                            <div className="navigator">
+                                <a className="btn btn-primary" onClick={() => setOffsetDays(offsetDays -7)}>前週</a>
+                                <a className="btn btn-primary" onClick={() => setOffsetDays(0)}>今週</a>
+                                <a className="btn btn-primary" onClick={() => setOffsetDays(offsetDays + 7)}>来週</a>
+                            </div>
+                        </>
+                    )
+            }
+        </div>
     );
 };
 

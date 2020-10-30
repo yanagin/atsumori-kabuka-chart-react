@@ -5,6 +5,15 @@ body {
 .chart {
   position: relative; 
   width: calc(100vw - 20px); 
-  height: calc(100vh - 100px);
+  height: calc(100vh - 200px);
   max-width: 100%;
+}
+
+.navigator {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.navigator .btn {
+  margin: 0 5px;
 }
