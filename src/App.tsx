@@ -8,6 +8,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [myAccount, setMyAccount] = useState<firebase.User>();
 
+  const provider = new firebase.auth.GoogleAuthProvider();
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       setLoading(false);
@@ -15,6 +17,10 @@ function App() {
       setMyAccount(user);
     });
   }, []);
+
+  const login = () => {
+    firebase.auth().signInWithRedirect(provider);
+  }
 
   return (
     <div className="App">
@@ -25,7 +31,8 @@ function App() {
           </p>
         ) : !myAccount ? (
           <p>
-            ログインが必要です
+            ログインが必要です<br />
+            <a onClick={login}>Login as google</a>
           </p>
         ) :
           <p>
