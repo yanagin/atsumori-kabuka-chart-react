@@ -2,11 +2,26 @@ body {
   padding: 10px;
 }
 
-.chart {
-  position: relative; 
-  width: calc(100vw - 20px); 
-  height: calc(100vh - 200px);
-  max-width: 100%;
+h1 {
+  font-size: 2rem;
+  font-weight: bold;;
+}
+
+.menu {
+  display: none;
+}
+
+.form-group label {
+  display: block;
+}
+
+.form-group .island_name, .form-group .kabuka {
+  display: inline-block; 
+  width: 50%;
+}
+
+.form-group .btn {
+  vertical-align: bottom;
 }
 
 .navigator {
@@ -16,4 +31,11 @@ body {
 
 .navigator .btn {
   margin: 0 5px;
+}
+
+.chart {
+  position: relative; 
+  width: calc(100vw - 20px); 
+  height: calc(100vh - 250px);
+  max-width: 100%;
 }
