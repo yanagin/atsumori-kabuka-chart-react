@@ -22,6 +22,25 @@ function App() {
     firebase.auth().signInWithRedirect(provider);
   }
 
+  const refreshChart = () => {
+    if (!myAccount) {
+      return;
+    }
+    const keyConditionFrom = '2020-09-01_AM';
+    const keyConditionTo = '2020-12-31-PM';
+    let history = firebase.firestore().collection('users').doc(myAccount.uid).collection('kabuka')
+      .where('key', '>=', keyConditionFrom)
+      .where('key', '<', keyConditionTo)
+      .orderBy('key', 'desc');
+      history.get().then(snapshot => {
+        var docs = snapshot.docs.reverse();
+        docs.forEach(doc => {
+          var data = doc.data();
+          console.log(data);
+        });
+      });
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -36,7 +55,8 @@ function App() {
           </p>
         ) :
           <p>
-            ログイン済み
+            ログイン済み<br />
+            <a onClick={refreshChart}>Refresh chart</a>
           </p>
         }
       </header>
