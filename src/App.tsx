@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>あつ森カブ値チャート</h1>
+      <h1>あつ森カブ価チャート</h1>
       {loading ? (
         <p>
           LOADING.....
