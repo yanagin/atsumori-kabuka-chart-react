@@ -10,13 +10,8 @@ export const firebaseConfig = {
     storageBucket: env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: env.REACT_APP_MESSAGING_SENDER_ID,
     appId: env.REACT_APP_APP_ID,
-    measurementId: env.REACT_APP_MEASUREMENT_ID,
 };
 
-// Firebaseを紐付け、初期化
-export const firebaseApp = firebase.initializeApp(firebaseConfig);
-
-// Firestoreのインスタンス作成
-export const fireStore = firebaseApp.firestore();
+firebase.initializeApp(firebaseConfig);
 
 export default firebase;
