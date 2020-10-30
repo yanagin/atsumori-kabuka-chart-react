@@ -5,7 +5,12 @@ import './App.css';
 import firebase from './firebase';
 
 // chart.js
-import Chart from "./Chart";
+import Chart from './Chart';
+
+type ChartData = {
+  data: any;
+  options: any;
+}
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -25,33 +30,33 @@ function App() {
     firebase.auth().signInWithRedirect(provider);
   }
 
-  const chartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "My First dataset",
-        fill: true,
-        lineTension: 0.1,
-        backgroundColor: "#FFCF78",
-        borderColor: "FCC156",
-        borderCapStyle: "butt",
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: "miter",
-        pointBorderColor: "FFA809",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "FFA809",
-        pointHoverBorderColor: "rgba(220,220,220,1)",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40]
+  // グラフ
+  const [chartData, setChartData] = useState<ChartData>();
+
+  const createChartData = (label) => {
+    return {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: label,
+          borderWidth: 1,
+          data: []
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+              label: (tooltipItem, data) => {
+                  return 'kabuka: ' + Math.round(tooltipItem.yLabel * 100) / 100;
+              }
+          }
+        }
       }
-    ]
-  };
-  const chartOptions = {};
+    }
+  }
 
   const refreshChart = () => {
     if (!myAccount) {
@@ -63,12 +68,28 @@ function App() {
       .where('key', '>=', keyConditionFrom)
       .where('key', '<', keyConditionTo)
       .orderBy('key', 'desc');
+      const chart: ChartData = createChartData('test');
       history.get().then(snapshot => {
         var docs = snapshot.docs.reverse();
         docs.forEach(doc => {
           var data = doc.data();
-          console.log(data);
+          //console.log(data);
+          if (chart.data.labels.indexOf(data.key) >= 0) {
+            return;
+          }
+          chart.data.labels.push(data.key);
+          /*
+          chart.data.datasets.forEach(dataset => {
+            dataset.data.push({
+              x: data.key,
+              y: data.kabuka
+            });
+          });
+          */
+          chart.data.datasets[0].data.push(data.kabuka);
         });
+        console.log(chart);
+        setChartData(chart);
       });
   }
 
@@ -88,7 +109,7 @@ function App() {
           <p>
             ログイン済み<br />
             <a onClick={refreshChart}>Refresh chart</a>
-            <Chart data={chartData} />
+            {chartData ? <Chart data={chartData.data} options={chartData.options} /> : <></>}
           </p>
         }
       </header>
