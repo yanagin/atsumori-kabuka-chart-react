@@ -6,28 +6,49 @@ import firebase from './firebase';
 
 import KabukaChart from './KabukaChart';
 
-type ChartData = {
-  data: any;
-  options: any;
+type IslandData = {
+  name: string;
+  image: string;
 }
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [myAccount, setMyAccount] = useState<firebase.User>();
+  const [island, setIsland] = useState<IslandData>();
 
   // ログイン処理
+  const login = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+  }
+
+  // ユーザー情報
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       setLoading(false);
       if (!user) return;
       setMyAccount(user);
+
+      const docRef = firebase.firestore().collection('users').doc(user.uid);
+      docRef.get().then(function (doc) {
+        if (doc.exists) {
+          const data = doc.data();
+          console.log("Docuient data:", data);
+          const image = user.photoURL;
+          if (data && image) {
+            setIsland({
+              name: data.islandName,
+              image: image
+            });
+          }
+        } else {
+          console.log('no island');
+        }
+      }).catch(function (error) {
+        console.log("Error getting document:", error);
+      });
     });
   }, []);
-
-  const login = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
-  }
 
   return (
     <div className="App">
@@ -42,7 +63,14 @@ function App() {
           <a onClick={login}>Login as google</a>
         </p>
       ) :
-          <KabukaChart user={myAccount} />
+          <>
+            {
+              island
+                ? <div className="island"><img src={island.image} width="36" height="36" /><span className="island-name">{island.name}</span></div>
+                : <></>
+            }
+            <KabukaChart user={myAccount} />
+          </>
       }
     </div>
   );

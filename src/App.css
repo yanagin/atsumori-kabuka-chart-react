@@ -11,6 +11,11 @@ h1 {
   display: none;
 }
 
+.island-name {
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+
 .form-group label {
   display: block;
 }
