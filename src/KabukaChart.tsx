@@ -37,7 +37,7 @@ const KabukaChart = (props: Props) => {
             .where('key', '>=', keyConditionFrom)
             .where('key', '<', keyConditionTo)
             .orderBy('key', 'desc');
-        const chart: ChartData = createChartData('test');
+        const chart: ChartData = createChartData(keyConditionFrom.substring(0, 10));
         history.get().then(snapshot => {
             var docs = snapshot.docs.reverse();
             docs.forEach(doc => {
