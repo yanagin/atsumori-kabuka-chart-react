@@ -5,6 +5,7 @@ import './App.css';
 import firebase from './firebase';
 
 import KabukaChart from './KabukaChart';
+import SignUp from './SignUp';
 
 type IslandData = {
   name: string;
@@ -32,6 +33,7 @@ function App() {
       const docRef = firebase.firestore().collection('users').doc(user.uid);
       docRef.get().then(function (doc) {
         if (doc.exists) {
+          // 登録済み
           const data = doc.data();
           console.log("Docuient data:", data);
           const image = user.photoURL;
@@ -42,6 +44,7 @@ function App() {
             });
           }
         } else {
+          // 未登録
           console.log('no island');
         }
       }).catch(function (error) {
@@ -50,28 +53,39 @@ function App() {
     });
   }, []);
 
+  const render = () => {
+    if (loading) {
+      return (
+        <div>読込中....</div>
+      )
+    }
+    if (!myAccount) {
+      return (
+        <div>
+          <h2>ログインが必要です</h2>
+          <a onClick={login}>Login as google</a>
+        </div>
+      )
+    }
+    if (!island || !island.name) {
+      return (
+        <SignUp user={myAccount} />
+      )
+    }
+    return (
+        <div>
+          <div className="island">
+            <img src={island.image} width="36" height="36" /><span className="island-name">{island.name}</span>
+          </div>
+          <KabukaChart user={myAccount} />
+        </div>
+    )
+  }
+
   return (
     <div className="App">
       <h1>あつ森カブ価チャート</h1>
-      {loading ? (
-        <p>
-          LOADING.....
-        </p>
-      ) : !myAccount ? (
-        <p>
-          ログインが必要です<br />
-          <a onClick={login}>Login as google</a>
-        </p>
-      ) :
-          <>
-            {
-              island
-                ? <div className="island"><img src={island.image} width="36" height="36" /><span className="island-name">{island.name}</span></div>
-                : <></>
-            }
-            <KabukaChart user={myAccount} />
-          </>
-      }
+      {render()}
     </div>
   );
 }

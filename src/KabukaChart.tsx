@@ -51,7 +51,7 @@ const KabukaChart = (props: Props) => {
 
     const date = new Date();
     const kabukaDateKey = formatDate(date) + '_' + (date.getHours() < 12 ? 'AM' : 'PM ');
-    const displayKabukaDate = formatDate(date) + ' ' + (date.getHours() < 12 ? '午前' : '午後 ') + 'のカブ価は？';
+    const displayKabukaDate = formatDate(date) + ' ' + (date.getHours() < 12 ? '午前' : '午後 ');
     const onSubmit = (form: FormData) => {
         //console.log('kabukaDateKey->' + kabukaDateKey);
         const kabuka = form.kabuka;
@@ -147,9 +147,8 @@ const KabukaChart = (props: Props) => {
     return (
         <div>
             <div className="form-group">
-                <p></p>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <label>{displayKabukaDate}</label>
+                    <label>{displayKabukaDate}のカブ価は？</label>
                     <input className="form-control kabuka" type="number" name="kabuka" ref={register({ required: true, maxLength: 5 })} />
                     <input className="btn btn-primary" type="submit" value="記録" />
                 </form>
