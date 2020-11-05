@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 
 type Props = {
     user: firebase.User
+    onSignUp: any
 };
 
 type FormData = {
@@ -24,6 +25,7 @@ const SignUp = (props: Props) => {
         })
         .then(function () {
             console.log("Document successfully written!");
+            props.onSignUp();
         })
         .catch(function (error) {
             console.error("Error writing document: ", error);

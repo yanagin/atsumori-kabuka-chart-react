@@ -31,29 +31,44 @@ function App() {
       setLoading(false);
       if (!user) return;
       setMyAccount(user);
-
-      const docRef = firebase.firestore().collection('users').doc(user.uid);
-      docRef.get().then(function (doc) {
-        if (doc.exists) {
-          // 登録済み
-          const data = doc.data();
-          console.log("Docuient data:", data);
-          const image = user.photoURL;
-          if (data && image) {
-            setIsland({
-              name: data.islandName,
-              image: image
-            });
-          }
-        } else {
-          // 未登録
-          console.log('no island');
-        }
-      }).catch(function (error) {
-        console.log("Error getting document:", error);
-      });
+      auth(user);
     });
   }, []);
+
+  const auth = (user: firebase.User) => {
+    if (!user || !user.uid) {
+      return;
+    }
+    
+    const docRef = firebase.firestore().collection('users').doc(user.uid);
+    docRef.get().then(function (doc) {
+      if (doc.exists) {
+        // 登録済み
+        const data = doc.data();
+        console.log("Docuient data:", data);
+        const image = user.photoURL;
+        if (data && image) {
+          setIsland({
+            name: data.islandName,
+            image: image
+          });
+        }
+      } else {
+        // 未登録
+        console.log('no island');
+      }
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
+  }
+
+  // 島の登録を伝搬させるためのコールバック
+  const onSignUp = () => {
+    if (!myAccount) {
+      return;
+    }
+    auth(myAccount);
+  }
 
   // 株価の記録を伝搬させるコールバック
   const onKabukaAdd = () => {
@@ -76,7 +91,7 @@ function App() {
     }
     if (!island || !island.name) {
       return (
-        <SignUp user={myAccount} />
+        <SignUp user={myAccount} onSignUp={() => onSignUp()} />
       )
     }
     return (
