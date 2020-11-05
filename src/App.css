@@ -47,7 +47,7 @@ h1, h2 {
 
 .chart {
   position: relative; 
-  width: calc(100vw - 20px); 
-  height: calc(100vh - 250px);
+  width: 100%; 
+  height: calc(100vh - 300px);
   max-width: 100%;
 }
