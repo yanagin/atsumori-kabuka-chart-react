@@ -31,24 +31,28 @@ const KabukaChart = (props: Props) => {
             return;
         }
         //console.log(weekFirstDay);
+        const weekLastDay = addDate(weekFirstDay, 7);
         const keyConditionFrom = formatDate(weekFirstDay) + '_AM';
-        const keyConditionTo = formatDate(addDate(weekFirstDay, 7)) + '_AM';
+        const keyConditionTo = formatDate(weekLastDay) + '_AM';
+        const chart: ChartData = createChartData(keyConditionFrom.substring(0, 10));
         let history = firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka')
             .where('key', '>=', keyConditionFrom)
             .where('key', '<', keyConditionTo)
             .orderBy('key', 'desc');
-        const chart: ChartData = createChartData(keyConditionFrom.substring(0, 10));
         history.get().then(snapshot => {
-            var docs = snapshot.docs.reverse();
-            docs.forEach(doc => {
+            var docs: any = [];
+            snapshot.docs.reverse().forEach(doc => {
                 var data = doc.data();
-                //console.log(data);
-                if (chart.data.labels.indexOf(data.key) >= 0) {
-                    return;
-                }
-                chart.data.labels.push(data.key);
-                chart.data.datasets[0].data.push(data.kabuka);
+                docs.push({key: data.key.trim(), kabuka: data.kabuka});
             });
+
+            drawChart(formatDate(weekFirstDay) + '_AM', docs, chart);
+            for (let i = 1; i < 7; i++) {
+                const date = addDate(weekFirstDay, i);
+                drawChart(formatDate(date) + '_AM', docs, chart);
+                drawChart(formatDate(date) + '_PM', docs, chart);
+            }
+
             setChartData(chart);
         });
         setLoading(false);
@@ -93,6 +97,17 @@ const KabukaChart = (props: Props) => {
         let date2 = new Date(date.getTime());
         date2.setDate(date2.getDate() + days);
         return date2;
+    }
+
+    const drawChart = (key: string, docs: any, chart: ChartData) => {
+        let doc: any = docs.filter((doc) => doc.key == key);
+        let kabuka = '0';
+        if (doc && doc.length > 0) {
+            kabuka = doc[0].kabuka;
+        }
+        // console.log(key + ' -> ' + kabuka);
+        chart.data.labels.push(key);
+        chart.data.datasets[0].data.push(kabuka);
     }
 
     return (
