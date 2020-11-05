@@ -40,7 +40,6 @@ const KabukaForm = (props: Props) => {
         .then(function () {
             console.log("Document successfully written!");
             setOffsetDays(0);
-            //setLoading(true); // 今週に反映させるため
             props.onKabukaAdd();
         })
         .catch(function (error) {
