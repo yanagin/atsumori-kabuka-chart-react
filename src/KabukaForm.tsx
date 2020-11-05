@@ -27,7 +27,7 @@ const KabukaForm = (props: Props) => {
     const [offsetDays, setOffsetDays] = useState(0);
 
     const date = new Date();
-    const kabukaDateKey = formatDate(date) + '_' + (date.getHours() < 12 ? 'AM' : 'PM ');
+    const kabukaDateKey = formatDate(date) + '_' + (date.getHours() < 12 ? 'AM' : 'PM');
     const displayKabukaDate = formatDate(date) + ' ' + (date.getHours() < 12 ? '午前' : '午後 ');
     const onSubmit = (form: FormData) => {
         //console.log('kabukaDateKey->' + kabukaDateKey);
