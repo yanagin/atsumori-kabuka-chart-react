@@ -10,6 +10,7 @@ import { formatDate } from './Utils';
 
 type Props = {
     user: firebase.User
+    kabukaAddedAt: Date
 };
 
 type ChartData = {
@@ -51,7 +52,7 @@ const KabukaChart = (props: Props) => {
             setChartData(chart);
         });
         setLoading(false);
-    }, [props.user, loading, offsetDays]);
+    }, [props.user, loading, offsetDays, props.kabukaAddedAt]);
 
     const createChartData = (label: string): ChartData => {
         return {

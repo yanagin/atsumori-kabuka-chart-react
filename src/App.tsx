@@ -17,6 +17,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [myAccount, setMyAccount] = useState<firebase.User>();
   const [island, setIsland] = useState<IslandData>();
+  const [kabukaAddedAt, setKabukaAddedAt] = useState<Date>(new Date());
 
   // ログイン処理
   const login = () => {
@@ -54,6 +55,11 @@ function App() {
     });
   }, []);
 
+  // 株価の記録を伝搬させるコールバック
+  const onKabukaAdd = () => {
+    setKabukaAddedAt(new Date());
+  }
+
   const render = () => {
     if (loading) {
       return (
@@ -78,8 +84,8 @@ function App() {
         <div className="island">
           <img src={island.image} width="36" height="36" /><span className="island-name">{island.name}</span>
         </div>
-        <KabukaForm user={myAccount} />
-        <KabukaChart user={myAccount} />
+        <KabukaForm user={myAccount} onKabukaAdd={() => onKabukaAdd()} />
+        <KabukaChart user={myAccount} kabukaAddedAt={kabukaAddedAt} />
       </div>
     )
   }

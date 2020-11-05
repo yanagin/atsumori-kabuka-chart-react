@@ -10,6 +10,7 @@ import { formatDate } from './Utils';
 
 type Props = {
     user: firebase.User
+    onKabukaAdd: any
 };
 
 type FormData = {
@@ -40,6 +41,7 @@ const KabukaForm = (props: Props) => {
             console.log("Document successfully written!");
             setOffsetDays(0);
             //setLoading(true); // 今週に反映させるため
+            props.onKabukaAdd();
         })
         .catch(function (error) {
             console.error("Error writing document: ", error);
