@@ -3,19 +3,14 @@ import React, { useState, useEffect } from 'react';
 // firebase functions
 import firebase from './firebase';
 
-// form
-import { useForm } from 'react-hook-form';
-
 // chart.js
 import Chart from './Chart';
+
+import { formatDate } from './Utils';
 
 type Props = {
     user: firebase.User
 };
-
-type FormData = {
-    kabuka: number
-}
 
 type ChartData = {
     data: any;
@@ -24,53 +19,8 @@ type ChartData = {
 
 const KabukaChart = (props: Props) => {
     const [loading, setLoading] = useState(false);
-    const { register, handleSubmit } = useForm<FormData>();
     const [offsetDays, setOffsetDays] = useState(0);
     const [chartData, setChartData] = useState<ChartData>();
-
-    // 共通
-    
-    const formatDate = (date: Date): string => {
-        if (!date) {
-            date = new Date();
-        }
-        const month = date.getMonth() + 1;
-        let sMonth = month.toString();
-        if (month < 10) {
-            sMonth = '0' + month;
-        }
-        const day = date.getDate();
-        let sDay = day.toString();
-        if (day < 10) {
-            sDay = '0' + day;
-        }
-        return date.getFullYear() + '-' + sMonth + '-' + sDay;
-    }
-
-    // カブ価記録
-
-    const date = new Date();
-    const kabukaDateKey = formatDate(date) + '_' + (date.getHours() < 12 ? 'AM' : 'PM ');
-    const displayKabukaDate = formatDate(date) + ' ' + (date.getHours() < 12 ? '午前' : '午後 ');
-    const onSubmit = (form: FormData) => {
-        //console.log('kabukaDateKey->' + kabukaDateKey);
-        const kabuka = form.kabuka;
-        const key = kabukaDateKey;
-        firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka').doc(key).set({
-          key: key,
-          kabuka: kabuka
-        })
-        .then(function() {
-          console.log("Document successfully written!");
-          setOffsetDays(0);
-          setLoading(true); // 今週に反映させるため
-        })
-        .catch(function(error) {
-          console.error("Error writing document: ", error);
-        });
-    }
-
-    // チャート描画
 
     useEffect(() => {
         console.log('refresh chart');
@@ -146,37 +96,26 @@ const KabukaChart = (props: Props) => {
 
     return (
         <div>
-            <div className="form-group">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <label>{displayKabukaDate}のカブ価は？</label>
-                    <input className="form-control kabuka" type="number" name="kabuka" ref={register({ required: true, maxLength: 5 })} />
-                    <input className="btn btn-primary" type="submit" value="記録" />
-                </form>
-            </div>
-            <div>
-                {
-                    loading
-                        ? (
-                            <p>
-                                LOADING.....
-                            </p>
-                        )
-                        : (
-                            <>
-                                {
-                                    chartData
-                                        ? <Chart data={chartData.data} options={chartData.options} />
-                                        : <></>
-                                }
-                                <div className="navigator">
-                                    <a className="btn btn-primary" onClick={() => setOffsetDays(offsetDays - 7)}>前週</a>
-                                    <a className="btn btn-primary" onClick={() => setOffsetDays(0)}>今週</a>
-                                    <a className="btn btn-primary" onClick={() => setOffsetDays(offsetDays + 7)}>来週</a>
-                                </div>
-                            </>
-                        )
-                }
-            </div>
+            {
+                loading
+                    ? (
+                        <div>読込中....</div>
+                    )
+                    : (
+                        <>
+                            {
+                                chartData
+                                    ? <Chart data={chartData.data} options={chartData.options} />
+                                    : <></>
+                            }
+                            <div className="navigator">
+                                <a className="btn btn-primary" onClick={() => setOffsetDays(offsetDays - 7)}>前週</a>
+                                <a className="btn btn-primary" onClick={() => setOffsetDays(0)}>今週</a>
+                                <a className="btn btn-primary" onClick={() => setOffsetDays(offsetDays + 7)}>来週</a>
+                            </div>
+                        </>
+                    )
+            }
         </div>
     );
 };

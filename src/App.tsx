@@ -4,6 +4,7 @@ import './App.css';
 // firebase functions
 import firebase from './firebase';
 
+import KabukaForm from './KabukaForm';
 import KabukaChart from './KabukaChart';
 import SignUp from './SignUp';
 
@@ -62,7 +63,7 @@ function App() {
     if (!myAccount) {
       return (
         <div>
-          <h2>ログインが必要です</h2>
+          ログインが必要です<br />
           <a onClick={login}>Login as google</a>
         </div>
       )
@@ -73,12 +74,13 @@ function App() {
       )
     }
     return (
-        <div>
-          <div className="island">
-            <img src={island.image} width="36" height="36" /><span className="island-name">{island.name}</span>
-          </div>
-          <KabukaChart user={myAccount} />
+      <div>
+        <div className="island">
+          <img src={island.image} width="36" height="36" /><span className="island-name">{island.name}</span>
         </div>
+        <KabukaForm user={myAccount} />
+        <KabukaChart user={myAccount} />
+      </div>
     )
   }
 
