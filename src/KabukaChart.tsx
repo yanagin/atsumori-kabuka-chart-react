@@ -5,6 +5,7 @@ import firebase from './firebase';
 
 // chart.js
 import Chart from './Chart';
+import 'chartjs-plugin-annotation';
 
 import { formatDate } from './Utils';
 
@@ -43,8 +44,10 @@ const KabukaChart = (props: Props) => {
             var docs: any = [];
             snapshot.docs.reverse().forEach(doc => {
                 var data = doc.data();
-                docs.push({key: data.key.trim(), kabuka: data.kabuka});
+                docs.push({ key: data.key.trim(), kabuka: data.kabuka });
             });
+
+            drawHorizontalLine(formatDate(weekFirstDay) + '_AM', docs, chart);
 
             drawChart(formatDate(weekFirstDay) + '_AM', docs, chart);
             for (let i = 1; i < 7; i++) {
@@ -77,7 +80,22 @@ const KabukaChart = (props: Props) => {
                             return 'kabuka: ' + Math.round(tooltipItem.yLabel * 100) / 100;
                         }
                     }
-                }
+                },
+                annotation: {
+                    events: ["click"],
+                    annotations: [
+                      {
+                        drawTime: "afterDatasetsDraw",
+                        id: "hline",
+                        type: "line",
+                        mode: "horizontal",
+                        scaleID: "y-axis-0",
+                        value: "0",
+                        borderColor: "blue",
+                        borderWidth: 1
+                      }
+                    ]
+                  }
             }
         }
     }
@@ -108,6 +126,15 @@ const KabukaChart = (props: Props) => {
         // console.log(key + ' -> ' + kabuka);
         chart.data.labels.push(key);
         chart.data.datasets[0].data.push(kabuka);
+    }
+
+    const drawHorizontalLine = (key: string, docs: any, chart: ChartData) => {
+        let doc: any = docs.filter((doc) => doc.key == key);
+        let kabuka = '0';
+        if (doc && doc.length > 0) {
+            kabuka = doc[0].kabuka;
+        }
+        chart.options.annotation.annotations[0].value = kabuka;
     }
 
     return (
