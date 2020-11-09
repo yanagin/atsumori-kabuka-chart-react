@@ -6,6 +6,7 @@ import firebase from './firebase';
 
 import KabukaForm from './KabukaForm';
 import KabukaChart from './KabukaChart';
+import SignIn from './SignIn';
 import SignUp from './SignUp';
 
 type IslandData = {
@@ -83,10 +84,7 @@ function App() {
     }
     if (!myAccount) {
       return (
-        <div>
-          ログインが必要です<br />
-          <a onClick={login}>Login as google</a>
-        </div>
+        <SignIn />
       )
     }
     if (!island || !island.name) {
