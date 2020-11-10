@@ -94,7 +94,9 @@ const KabukaChart = (props: Props) => {
                         scaleID: "y-axis-0",
                         value: "0",
                         borderColor: "blue",
-                        borderWidth: 1
+                        borderWidth: 1,
+                        borderDash: [10, 10],
+                        borderDashOffset: 5,
                       }
                     ]
                   }
