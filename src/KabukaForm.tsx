@@ -38,12 +38,12 @@ const KabukaForm = (props: Props) => {
             key: key,
             kabuka: kabuka
         })
-        .then(function () {
+        .then(() => {
             console.log("Document successfully written!");
             setOffsetDays(0);
             props.onKabukaAdd();
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.error("Error writing document: ", error);
         });
     }

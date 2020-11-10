@@ -42,7 +42,7 @@ function App() {
     }
     
     const docRef = firebase.firestore().collection('users').doc(user.uid);
-    docRef.get().then(function (doc) {
+    docRef.get().then((doc: any) => {
       if (doc.exists) {
         // 登録済み
         const data = doc.data();
@@ -58,7 +58,7 @@ function App() {
         // 未登録
         console.log('no island');
       }
-    }).catch(function (error) {
+    }).catch((error: any) => {
       console.log("Error getting document:", error);
     });
   }

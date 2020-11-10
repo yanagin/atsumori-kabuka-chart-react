@@ -23,11 +23,11 @@ const SignUp = (props: Props) => {
         firebase.firestore().collection('users').doc(props.user.uid).set({
             islandName: islandName
         })
-        .then(function () {
+        .then(() => {
             console.log("Document successfully written!");
             props.onSignUp();
         })
-        .catch(function (error) {
+        .catch((error: any) => {
             console.error("Error writing document: ", error);
         });
     }
