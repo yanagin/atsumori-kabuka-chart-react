@@ -7,7 +7,7 @@ import firebase from './firebase';
 import Chart from './Chart';
 import 'chartjs-plugin-annotation';
 
-import { formatDate } from './Utils';
+import { formatDate, formatDisplayDate } from './Utils';
 
 type Props = {
     user: firebase.User
@@ -68,8 +68,8 @@ const KabukaChart = (props: Props) => {
         setLoading(false);
     }, [props.user, loading, offsetDays, props.kabukaAddedAt]);
 
-    const createChartData = (keyConditionFrom: Date): ChartData => {
-        const label = formatDate(keyConditionFrom) + '週のカブ価';
+    const createChartData = (datetime: Date): ChartData => {
+        const label = formatDisplayDate(datetime) + '週のカブ価';
         return {
             data: {
                 labels: [],
@@ -92,20 +92,20 @@ const KabukaChart = (props: Props) => {
                 annotation: {
                     events: ["click"],
                     annotations: [
-                      {
-                        drawTime: "afterDatasetsDraw",
-                        id: "hline" + label,    // valueの変更を反映するためユニークな値にする
-                        type: "line",
-                        mode: "horizontal",
-                        scaleID: "y-axis-0",
-                        value: "0",
-                        borderColor: "blue",
-                        borderWidth: 1,
-                        borderDash: [10, 10],
-                        borderDashOffset: 5,
-                      }
+                        {
+                            drawTime: "afterDatasetsDraw",
+                            id: "hline" + label,    // valueの変更を反映するためユニークな値にする
+                            type: "line",
+                            mode: "horizontal",
+                            scaleID: "y-axis-0",
+                            value: "0",
+                            borderColor: "blue",
+                            borderWidth: 1,
+                            borderDash: [10, 10],
+                            borderDashOffset: 5,
+                        }
                     ]
-                  }
+                }
             }
         }
     }
@@ -134,12 +134,12 @@ const KabukaChart = (props: Props) => {
     const drawChart = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
         const key = getKey(datetime, ampm);
         let doc: any = docs.filter((doc: any) => doc.key == key);
-        let kabuka = datetime > new Date() ? Number.NaN: 0;
+        let kabuka = datetime > new Date() ? Number.NaN : 0;
         if (doc && doc.length > 0) {
             kabuka = doc[0].kabuka;
         }
         // console.log(key + ' -> ' + kabuka);
-        chart.data.labels.push(key);
+        chart.data.labels.push(formatDisplayDate(datetime) + ' ' + (ampm == AMPM.AM ? '午前' : '午後'));
         chart.data.datasets[0].data.push(kabuka);
     }
 
