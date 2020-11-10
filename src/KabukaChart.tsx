@@ -133,7 +133,7 @@ const KabukaChart = (props: Props) => {
     const drawChart = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
         const key = getKey(datetime, ampm);
         let doc: any = docs.filter((doc) => doc.key == key);
-        let kabuka = '0';
+        let kabuka = datetime > new Date() ? Number.NaN: 0;
         if (doc && doc.length > 0) {
             kabuka = doc[0].kabuka;
         }
