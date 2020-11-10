@@ -105,6 +105,15 @@ const KabukaChart = (props: Props) => {
                             borderDashOffset: 5,
                         }
                     ]
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            callback: (value: any, index: any, values: any) => {
+                                return value + 'カブ';
+                            }
+                        }
+                    }]
                 }
             }
         }
