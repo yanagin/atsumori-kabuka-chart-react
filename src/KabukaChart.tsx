@@ -7,7 +7,7 @@ import firebase from './firebase';
 import Chart from './Chart';
 import 'chartjs-plugin-annotation';
 
-import { formatDate, formatDisplayDate } from './Utils';
+import { formatDisplayDate, AMPM, getKabukaKey } from './Utils';
 
 type Props = {
     user: firebase.User
@@ -17,11 +17,6 @@ type Props = {
 type ChartData = {
     data: any;
     options: any;
-}
-
-enum AMPM {
-    AM,
-    PM
 }
 
 var counter = 0;
@@ -40,8 +35,8 @@ const KabukaChart = (props: Props) => {
         }
         //console.log(weekFirstDay);
         const weekLastDay = addDate(weekFirstDay, 7);
-        const keyConditionFrom = getKey(weekFirstDay, AMPM.AM);
-        const keyConditionTo = getKey(weekLastDay, AMPM.AM);
+        const keyConditionFrom = getKabukaKey(weekFirstDay, AMPM.AM);
+        const keyConditionTo = getKabukaKey(weekLastDay, AMPM.AM);
         const chart: ChartData = createChartData(weekFirstDay);
         let history = firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka')
             .where('key', '>=', keyConditionFrom)
@@ -136,12 +131,8 @@ const KabukaChart = (props: Props) => {
         return date2;
     }
 
-    const getKey = (datetime: Date, ampm: AMPM) => {
-        return formatDate(datetime) + '_' + (ampm == AMPM.AM ? 'AM' : 'PM');
-    }
-
     const drawChart = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
-        const key = getKey(datetime, ampm);
+        const key = getKabukaKey(datetime, ampm);
         let doc: any = docs.filter((doc: any) => doc.key == key);
         let kabuka = datetime > new Date() ? Number.NaN : 0;
         if (doc && doc.length > 0) {
@@ -153,7 +144,7 @@ const KabukaChart = (props: Props) => {
     }
 
     const drawHorizontalLine = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
-        const key = getKey(datetime, ampm);
+        const key = getKabukaKey(datetime, ampm);
         let doc: any = docs.filter((doc: any) => doc.key == key);
         let kabuka = '0';
         if (doc && doc.length > 0) {

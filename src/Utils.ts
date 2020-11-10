@@ -21,3 +21,12 @@ export const formatDisplayDate = (date: Date): string => {
     }
     return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
 }
+
+export enum AMPM {
+    AM,
+    PM
+}
+
+export const getKabukaKey = (datetime: Date, ampm: AMPM) => {
+    return formatDate(datetime) + '_' + (ampm == AMPM.AM ? 'AM' : 'PM');
+}

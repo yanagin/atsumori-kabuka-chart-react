@@ -6,7 +6,7 @@ import firebase from './firebase';
 // form
 import { useForm } from 'react-hook-form';
 
-import { formatDate } from './Utils';
+import { formatDisplayDate, AMPM, getKabukaKey } from './Utils';
 
 type Props = {
     user: firebase.User
@@ -27,8 +27,9 @@ const KabukaForm = (props: Props) => {
     const [offsetDays, setOffsetDays] = useState(0);
 
     const date = new Date();
-    const kabukaDateKey = formatDate(date) + '_' + (date.getHours() < 12 ? 'AM' : 'PM');
-    const displayKabukaDate = formatDate(date) + ' ' + (date.getHours() < 12 ? '午前' : '午後 ');
+    const ampm = date.getHours() < 12 ? AMPM.AM : AMPM.PM;
+    const kabukaDateKey = getKabukaKey(date, ampm);
+    const displayKabukaDate = formatDisplayDate(date)  + ' ' + (ampm == AMPM.AM ? '午前' : '午後');
     const onSubmit = (form: FormData) => {
         //console.log('kabukaDateKey->' + kabukaDateKey);
         const kabuka = form.kabuka;
