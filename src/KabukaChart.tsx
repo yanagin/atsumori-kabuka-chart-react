@@ -42,7 +42,7 @@ const KabukaChart = (props: Props) => {
         const weekLastDay = addDate(weekFirstDay, 7);
         const keyConditionFrom = getKey(weekFirstDay, AMPM.AM);
         const keyConditionTo = getKey(weekLastDay, AMPM.AM);
-        const chart: ChartData = createChartData(keyConditionFrom.substring(0, 10));
+        const chart: ChartData = createChartData(weekFirstDay);
         let history = firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka')
             .where('key', '>=', keyConditionFrom)
             .where('key', '<', keyConditionTo)
@@ -68,7 +68,8 @@ const KabukaChart = (props: Props) => {
         setLoading(false);
     }, [props.user, loading, offsetDays, props.kabukaAddedAt]);
 
-    const createChartData = (label: string): ChartData => {
+    const createChartData = (keyConditionFrom: Date): ChartData => {
+        const label = formatDate(keyConditionFrom) + '週のカブ価';
         return {
             data: {
                 labels: [],
