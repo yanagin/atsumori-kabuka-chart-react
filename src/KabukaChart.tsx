@@ -19,6 +19,8 @@ type ChartData = {
     options: any;
 }
 
+var counter = 0;
+
 const KabukaChart = (props: Props) => {
     const [loading, setLoading] = useState(false);
     const [offsetDays, setOffsetDays] = useState(0);
@@ -86,7 +88,7 @@ const KabukaChart = (props: Props) => {
                     annotations: [
                       {
                         drawTime: "afterDatasetsDraw",
-                        id: "hline",
+                        id: "hline" + label,    // valueの変更を反映するためユニークな値にする
                         type: "line",
                         mode: "horizontal",
                         scaleID: "y-axis-0",
