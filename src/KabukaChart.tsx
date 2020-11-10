@@ -19,6 +19,11 @@ type ChartData = {
     options: any;
 }
 
+enum AMPM {
+    AM,
+    PM
+}
+
 var counter = 0;
 
 const KabukaChart = (props: Props) => {
@@ -35,8 +40,8 @@ const KabukaChart = (props: Props) => {
         }
         //console.log(weekFirstDay);
         const weekLastDay = addDate(weekFirstDay, 7);
-        const keyConditionFrom = formatDate(weekFirstDay) + '_AM';
-        const keyConditionTo = formatDate(weekLastDay) + '_AM';
+        const keyConditionFrom = getKey(weekFirstDay, AMPM.AM);
+        const keyConditionTo = getKey(weekLastDay, AMPM.AM);
         const chart: ChartData = createChartData(keyConditionFrom.substring(0, 10));
         let history = firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka')
             .where('key', '>=', keyConditionFrom)
@@ -49,13 +54,13 @@ const KabukaChart = (props: Props) => {
                 docs.push({ key: data.key.trim(), kabuka: data.kabuka });
             });
 
-            drawHorizontalLine(formatDate(weekFirstDay) + '_AM', docs, chart);
+            drawHorizontalLine(weekFirstDay, AMPM.AM, docs, chart);
 
-            drawChart(formatDate(weekFirstDay) + '_AM', docs, chart);
+            drawChart(weekFirstDay, AMPM.AM, docs, chart);
             for (let i = 1; i < 7; i++) {
                 const date = addDate(weekFirstDay, i);
-                drawChart(formatDate(date) + '_AM', docs, chart);
-                drawChart(formatDate(date) + '_PM', docs, chart);
+                drawChart(date, AMPM.AM, docs, chart);
+                drawChart(date, AMPM.PM, docs, chart);
             }
 
             setChartData(chart);
@@ -121,7 +126,12 @@ const KabukaChart = (props: Props) => {
         return date2;
     }
 
-    const drawChart = (key: string, docs: any, chart: ChartData) => {
+    const getKey = (datetime: Date, ampm: AMPM) => {
+        return formatDate(datetime) + '_' + (ampm == AMPM.AM ? 'AM' : 'PM');
+    }
+
+    const drawChart = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
+        const key = getKey(datetime, ampm);
         let doc: any = docs.filter((doc) => doc.key == key);
         let kabuka = '0';
         if (doc && doc.length > 0) {
@@ -132,7 +142,8 @@ const KabukaChart = (props: Props) => {
         chart.data.datasets[0].data.push(kabuka);
     }
 
-    const drawHorizontalLine = (key: string, docs: any, chart: ChartData) => {
+    const drawHorizontalLine = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
+        const key = getKey(datetime, ampm);
         let doc: any = docs.filter((doc) => doc.key == key);
         let kabuka = '0';
         if (doc && doc.length > 0) {
