@@ -22,6 +22,12 @@ export const formatDisplayDate = (date: Date): string => {
     return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
 }
 
+export const getDayOfWeek = (date: Date): string => {
+    const DAY_OF_WEEKS = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayOfWeek = date.getDay();
+    return DAY_OF_WEEKS[dayOfWeek];
+}
+
 export enum AMPM {
     AM,
     PM

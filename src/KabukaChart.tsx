@@ -7,7 +7,7 @@ import firebase from './firebase';
 import Chart from './Chart';
 import 'chartjs-plugin-annotation';
 
-import { formatDisplayDate, AMPM, getKabukaKey } from './Utils';
+import { formatDisplayDate, AMPM, getKabukaKey, getDayOfWeek } from './Utils';
 
 type Props = {
     user: firebase.User
@@ -139,7 +139,7 @@ const KabukaChart = (props: Props) => {
             kabuka = doc[0].kabuka;
         }
         // console.log(key + ' -> ' + kabuka);
-        chart.data.labels.push(formatDisplayDate(datetime) + ' ' + (ampm == AMPM.AM ? '午前' : '午後'));
+        chart.data.labels.push(getDayOfWeek(datetime) + '曜日/' + (ampm == AMPM.AM ? '午前' : '午後'));
         chart.data.datasets[0].data.push(kabuka);
     }
 
