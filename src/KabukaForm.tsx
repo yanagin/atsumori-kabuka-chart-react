@@ -52,7 +52,7 @@ const KabukaForm = (props: Props) => {
         <div className="form-group">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <label>{displayKabukaDate}のカブ価は？</label>
-                <input className="form-control kabuka" type="number" name="kabuka" ref={register({ required: true, maxLength: 5 })} />
+                <input className="form-control kabuka" type="number" name="kabuka" ref={register({ required: true, maxLength: 5 })} />ベル
                 <input className="btn btn-primary" type="submit" value="記録" />
             </form>
         </div>
