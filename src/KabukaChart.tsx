@@ -105,7 +105,7 @@ const KabukaChart = (props: Props) => {
                     yAxes: [{
                         ticks: {
                             callback: (value: any, index: any, values: any) => {
-                                return value + 'カブ';
+                                return value + 'ベル';
                             }
                         }
                     }]
