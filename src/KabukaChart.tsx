@@ -80,7 +80,7 @@ const KabukaChart = (props: Props) => {
                 tooltips: {
                     callbacks: {
                         label: (tooltipItem: any, data: any) => {
-                            return 'kabuka: ' + Math.round(tooltipItem.yLabel * 100) / 100;
+                            return 'カブ価：' + (Math.round(tooltipItem.yLabel * 100) / 100) + 'ベル';
                         }
                     }
                 },
