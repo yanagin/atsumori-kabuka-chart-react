@@ -24,7 +24,6 @@ type ChartData = {
 
 const KabukaForm = (props: Props) => {
     const { register, handleSubmit } = useForm<FormData>();
-    const [offsetDays, setOffsetDays] = useState(0);
 
     const date = new Date();
     const ampm = date.getHours() < 12 ? AMPM.AM : AMPM.PM;
@@ -40,7 +39,6 @@ const KabukaForm = (props: Props) => {
         })
         .then(() => {
             console.log("Document successfully written!");
-            setOffsetDays(0);
             props.onKabukaAdd();
         })
         .catch((error) => {
