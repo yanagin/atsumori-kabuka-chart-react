@@ -26,11 +26,11 @@ const KabukaForm = (props: Props) => {
     const { register, handleSubmit } = useForm<FormData>();
 
     const date = new Date();
-    const ampm = date.getHours() < 12 ? AMPM.AM : AMPM.PM;
+    const ampm = (date.getDay() == 0 || date.getHours() < 12) ? AMPM.AM : AMPM.PM;
     const kabukaDateKey = getKabukaKey(date, ampm);
+    console.log('kabukaDateKey->' + kabukaDateKey);
     const displayKabukaDate = formatDisplayDate(date)  + ' ' + (ampm == AMPM.AM ? '午前' : '午後');
     const onSubmit = (form: FormData) => {
-        //console.log('kabukaDateKey->' + kabukaDateKey);
         const kabuka = form.kabuka;
         const key = kabukaDateKey;
         firebase.firestore().collection('users').doc(props.user.uid).collection('kabuka').doc(key).set({
