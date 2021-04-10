@@ -33,6 +33,10 @@ export enum AMPM {
     PM
 }
 
+export const getAMPM = (datetime: Date): AMPM => {
+    return (datetime.getDay() == 0 || datetime.getHours() < 12) ? AMPM.AM : AMPM.PM;
+}
+
 export const getKabukaKey = (datetime: Date, ampm: AMPM) => {
     return formatDate(datetime) + '_' + (ampm == AMPM.AM ? 'AM' : 'PM');
 }
