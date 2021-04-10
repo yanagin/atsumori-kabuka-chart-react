@@ -36,3 +36,20 @@ export enum AMPM {
 export const getKabukaKey = (datetime: Date, ampm: AMPM) => {
     return formatDate(datetime) + '_' + (ampm == AMPM.AM ? 'AM' : 'PM');
 }
+
+export const getWeekFirstDay = (offsetDays: number): Date | null => {
+    let date = addDate(new Date(), offsetDays);
+    for (let i = 0; i < 7; i++) {
+        if (date.getDay() == 0) {
+            return date;
+        }
+        date = addDate(date, -1);
+    }
+    return null;
+}
+
+export const addDate = (date: Date, days: number): Date => {
+    let date2 = new Date(date.getTime());
+    date2.setDate(date2.getDate() + days);
+    return date2;
+}

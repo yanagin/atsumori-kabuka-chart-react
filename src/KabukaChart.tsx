@@ -7,7 +7,7 @@ import firebase from './firebase';
 import Chart from './Chart';
 import 'chartjs-plugin-annotation';
 
-import { formatDisplayDate, AMPM, getKabukaKey, getDayOfWeek } from './Utils';
+import { formatDisplayDate, AMPM, getKabukaKey, getDayOfWeek, getWeekFirstDay, addDate } from './Utils';
 
 type Props = {
     user: firebase.User
@@ -110,23 +110,6 @@ const KabukaChart = (props: Props) => {
                 }
             }
         }
-    }
-
-    const getWeekFirstDay = (offsetDays: number): Date | null => {
-        let date = addDate(new Date(), offsetDays);
-        for (let i = 0; i < 7; i++) {
-            if (date.getDay() == 0) {
-                return date;
-            }
-            date = addDate(date, -1);
-        }
-        return null;
-    }
-
-    const addDate = (date: Date, days: number): Date => {
-        let date2 = new Date(date.getTime());
-        date2.setDate(date2.getDate() + days);
-        return date2;
     }
 
     const drawChart = (datetime: Date, ampm: AMPM, docs: any, chart: ChartData) => {
