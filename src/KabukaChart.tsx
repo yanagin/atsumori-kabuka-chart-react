@@ -19,8 +19,6 @@ type ChartData = {
     options: any;
 }
 
-var counter = 0;
-
 const KabukaChart = (props: Props) => {
     const [loading, setLoading] = useState(false);
     const [offsetDays, setOffsetDays] = useState(0);

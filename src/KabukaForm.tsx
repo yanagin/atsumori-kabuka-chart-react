@@ -17,11 +17,6 @@ type FormData = {
     kabuka: number
 }
 
-type ChartData = {
-    data: any;
-    options: any;
-}
-
 const KabukaForm = (props: Props) => {
     const { register, handleSubmit } = useForm<FormData>();
 
